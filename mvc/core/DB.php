@@ -2,9 +2,7 @@
 
 class DB
 {
-    private function __contruct()
-    {
-    }
+
     public static function get($sql, $params = [])
     {
         $stmt = self::connection()->prepare($sql);
@@ -17,17 +15,22 @@ class DB
         return $stmt->execute($params);
     }
 
-    public static function select($sql)
+    public static function select($sql, $params = [])
     {
         $stmt = self::connection()->prepare($sql);
-        $stmt->execute();
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
     private static function connection()
     {
-        $dbh = new PDO("mysql:host=localhost;dbname=transpublic", "root", "12345");
-        $dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        return $dbh;
+        try {
+            $dbh = new PDO(DBDRIVER . ":host=" . DBHOST . ";dbname=" . DBNAME . ";charset=" . DBCHARSET, DBUSER, DBPASWORD);
+            $dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $dbh;
+        } catch (PDOException $e) {
+            exit($e->getMessage());
+        }
     }
 }

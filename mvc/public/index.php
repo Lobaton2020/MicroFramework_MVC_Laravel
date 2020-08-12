@@ -1,14 +1,17 @@
 <?php
-
-chdir(dirname(__DIR__));
-define('SYS_PATH', 'lib/');
-define('APP_PATH', 'app/');
-require_once APP_PATH . 'helpers/testing.php';
-require_once APP_PATH . 'helpers/render_views.php';
+require_once "../app/config/config.php";
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'testing.php';
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'autoloader.php';
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'redirect.php';
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'message.php';
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'route.php';
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'json.php';
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'encrypt.php';
+require_once SYS_PATH . 'helpers' . SEPARATOR . 'render_views.php';
 spl_autoload_register(function ($class) {
-    include SYS_PATH . $class . ".php";
+    autoloader(SYS_PATH, $class);
+    autoloader(APP_PATH . "models" . SEPARATOR, $class);
 });
-include APP_PATH . "models/User.php";
-require_once APP_PATH . 'http/routes.php';
+require_once APP_PATH . 'http' . SEPARATOR . 'routes.php';
 
 new App();

@@ -1,16 +1,24 @@
-<form method="POST">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
-    </div>
-    <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="container">
+    <?= renderMessage("success") ?>
+    <?= renderMessage("error", "danger") ?>
+    <form method="POST" action="<?= route("users/store") ?>">
+        <input type="hidden" name="image" value="image/avatar.png">
+        <div class="form-group">
+            <label for="">Nombre completo</label>
+            <input type="text" name="name" class="form-control" value="" id="" placeholder="Nombre completo">
+        </div>
+        <div class="form-group">
+            <label for="">Correo</label>
+            <input type="text" name="email" class="form-control" value="" id="" placeholder="Correo">
+        </div>
+        <div class="form-group">
+            <label for="">Contraseña</label>
+            <input type="password" name="pass" class="form-control" value="" id="" placeholder="Contraseña">
+        </div>
+        <div class="form-group">
+            <label for="">Telefono</label>
+            <input type="text" name="cellphone" class="form-control" value="" id="" placeholder="Telefono">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Actualizar</button>
+    </form>
+</div>

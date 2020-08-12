@@ -22,21 +22,28 @@ class Router
 
     public static function add($methodData, $route, $location)
     {
-        $controller = explode('@', $location)[0];
-        $method = explode('@', $location)[1];
-        static::$routes[$route] = [
-            'controller' => $controller,
-            'method' => $method,
-            'methodData' => $methodData
-        ];
+        if (gettype($location) === "object") {
+            static::$routes[$route] = [
+                'callback' => $location,
+                'methodData' => $methodData
+            ];
+        } else {
+
+            $controller = explode('@', $location)[0];
+            $method = explode('@', $location)[1];
+            static::$routes[$route] = [
+                'controller' => $controller,
+                'method' => $method,
+                'methodData' => $methodData
+            ];
+        }
     }
 
 
     public static function getAction($route)
     {
         if (!empty($route)) {
-
-            $routeAux = [$route[0], $route[1]];
+            $routeAux = isset($route[1]) ? [$route[0], $route[1]] : [$route[0]];
             $routeAux = "/" . implode("/", $routeAux);
             array_shift($route);
             array_shift($route);
