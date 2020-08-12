@@ -78,36 +78,4 @@ class Router
     {
         return self::$params;
     }
-
-    public static function tryUseThisMethod($route)
-    {
-        $currentRoute = null;
-        foreach (self::$routes as $key => $value) {
-            self::$params = [];
-            $routeAux = [];
-            $routeAux2 = [];
-            $routeItem = $key != "/" ? explode('/', $key) : [""];
-            array_shift($routeItem);
-            // dd(count($route));
-            for ($i = 0; $i < count($route); $i++) {
-                if (isset($routeItem[$i])) {
-                    array_push($routeAux, $routeItem[$i]);
-                    array_push($routeAux2, $route[$i]);
-                }
-            }
-            self::$params = $route;
-            $routeAux = implode('/', $routeAux);
-            $routeAux = $route !== [] ? "/" . $routeAux : $routeAux;
-            $routeAux2 = "/" . implode('/', $routeAux2);
-            $rout = "/" . implode("/", $route);
-            if (array_key_exists($routeAux, self::$routes) && $routeAux == $routeAux2) {
-                $currentRoute =   self::$routes[$routeAux];
-            }
-        }
-        if ($currentRoute) {
-            return $currentRoute;
-        } else {
-            throw new Exception("Error 404, Route '{$rout}' not found");
-        }
-    }
 }
