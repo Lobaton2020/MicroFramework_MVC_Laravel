@@ -26,15 +26,15 @@ class App
                     if (class_exists($controller)) {
                         $controller = new $controller();
                         if (method_exists($controller, $method)) {
-                            call_user_func_array([$controller, $method], $this->params);
+                            echo (call_user_func_array([$controller, $method], $this->params));
                         } else {
-                            exit("Method Controller not found");
+                            exit(httpResponse(404, "error", "Method Controller not found")->json());
                         }
                     } else {
-                        exit("Class Controller not found");
+                        exit(httpResponse(404, "error", "Class Controller not found")->json());
                     }
                 } else {
-                    exit("File Controller not found");
+                    exit(httpResponse(404, "error", "File Controller not found")->json());
                 }
             }
         } catch (Exception $e) {

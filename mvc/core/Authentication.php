@@ -11,7 +11,7 @@ class Authentication
 
     protected function __construct()
     {
-        session_start();
+        $this->sessionStart();
         if (isset($_SESSION["activeSession"]) && isset($_SESSION["credentials"])) {
             if ($_SESSION["activeSession"] == true) {
                 $this->checkSession = true;
@@ -24,11 +24,23 @@ class Authentication
         }
     }
 
+    protected function sessionStart()
+    {
+        session_start();
+    }
     protected function checkSession()
     {
         return $this->checkSession;
     }
-
+    protected function getSession()
+    {
+        if (isset($_SESSION["credentials"])) {
+            if (!empty($_SESSION["credentials"])) {
+                return httpResponse(200, "session", "Session information user", $_SESSION["credentials"])->json();
+            }
+        }
+        return httpResponse(404, "error", "Session information user not found", false)->json();
+    }
     protected function setSession($datauser)
     {
         extract($datauser);

@@ -5,6 +5,7 @@ class User extends Model
 {
     protected $table = "usuario";
     protected $primaryKey = "idusuario";
+    protected $foreignKey = "id";
 
     public function login($email, $pass)
     {

@@ -1,6 +1,6 @@
 <?php
 define("DBHOST", "localhost");
-define("DBNAME", "testuser");
+define("DBNAME", "transpublic");
 define("DBUSER", "root");
 define("DBPASWORD", "12345");
 define("DBDRIVER", "mysql");

@@ -6,24 +6,17 @@ class Controller extends Authentication
     public function __construct()
     {
     }
-    public function authentication($type = "inside")
+    public function authentication($type = "AUTH")
     {
         parent::__construct();
         switch ($type) {
-            case "inside":
+            case "AUTH":
                 if (!$this->checkSession()) {
-                    redirect("auth");
-                    exit();
-                }
-                break;
-            case "outside":
-                if ($this->checkSession()) {
-                    redirect("main");
-                    exit();
+                    exit(httpResponse(403, "accessdenied", "Your Session have finished, Try to do login")->json());
                 }
                 break;
             default;
-                exit("Error param. Verify Authentication");
+                exit(httpResponse(404, "errorparam", "Error param. Verify Authentication")->json());
         }
     }
 }

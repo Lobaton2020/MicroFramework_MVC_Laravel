@@ -6,10 +6,6 @@ class Router
     private static $routes = [];
     private static $params = [];
 
-    private function __construct()
-    {
-    }
-
     public static function post($route, $location)
     {
         self::add("POST", $route, $location);
@@ -63,14 +59,13 @@ class Router
                     if (!empty($_POST)) {
                         self::$params[] = (object)$_POST;
                     }
-
                     return  self::$routes[$routeAux];
                 } else {
-                    throw new Exception("Error. Method request Unavailable");
+                    exit(httpResponse(404, "error", "Method request 'GET' Unavailable")->json());
                 }
             }
         } else {
-            throw new Exception("Error 404, Route '{$routeAux}' not found");
+            exit(httpResponse(404, "error", "Route '{$routeAux}' not found")->json());
         }
     }
 

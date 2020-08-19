@@ -3,12 +3,12 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->authentication("outside");
     }
 
     public function index()
     {
-        return view("auth.login", [], false);
+
+        return httpResponse(["user" => "sdfsdf"])->json();
     }
     public function login($request)
     {
@@ -21,17 +21,16 @@ class AuthController extends Controller
                 "name" => $user->nombrecompleto,
                 "email" => $user->correo
             ]);
-            redirect("users");
         } else {
-            redirect("auth")->with("error", "Error de auntenticacion");
         }
     }
-
+    public function getSession()
+    {
+        $this->sessionStart();
+        return parent::getSession();
+    }
     public function register()
     {
-        if (sessionExist("info")) {
-            echo session("info");
-        }
     }
     public function forgotPassword()
     {

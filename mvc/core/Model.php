@@ -5,6 +5,7 @@ class Model
 {
     protected $table;
     protected $primaryKey = "id";
+    protected $foreignKey = "id";
 
     public static function find($id)
     {
@@ -30,6 +31,34 @@ class Model
         return DB::select($sql);
     }
 
+    public static function where($tableHere = null, $where = [], $withStatus = true, $limit = 20)
+    {
+        $model = new static();
+        $table = gettype($tableHere) == "string" ? $tableHere : $model->table;
+        $where = (gettype($tableHere) == "array") ? $tableHere : $where;
+        $status = "";
+        $argument = "";
+        if ($withStatus) {
+            $status = "inhabilitado = 1";
+        }
+        if (!empty($where)) {
+            foreach ($where as $key => $value) {
+                $argument .= " " . $key . " = :" . $key . " AND";
+            }
+        }
+        $argument = !empty($argument) ? " WHERE" . $argument : "";
+        $status = empty($argument) ? " WHERE " . $status : $status;
+        $argument = empty($status) ? substr($argument, 0, strlen($argument) - 3) : $argument;
+        $sql = "SELECT * FROM {$table} {$argument} {$status} limit {$limit}";
+        return count(DB::select($sql, $where)) == 1 ? DB::select($sql, $where)[0] : DB::select($sql, $where);
+    }
+
+    public static function references($id, $limit = 20)
+    {
+        $model = new static();
+        $sql = "SELECT * FROM {$model->table} WHERE {$model->foreignKey} = :id limit {$limit}";
+        return DB::select($sql, [":id" => $id]);
+    }
     public static function delete($id = null, $limit = 1)
     {
         $model = new static();
