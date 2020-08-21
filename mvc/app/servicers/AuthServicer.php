@@ -1,5 +1,5 @@
 <?php
-class AuthController extends Controller
+class AuthServicer extends Servicer
 {
     public function __construct()
     {

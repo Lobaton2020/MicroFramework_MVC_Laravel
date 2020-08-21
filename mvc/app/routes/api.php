@@ -10,12 +10,13 @@
 Router::get('/', function ($session) {
     $session->authentication("inside");
 });
-Router::get('/auth', 'AuthController@index');
-Router::post('/auth/login', 'AuthController@login');
+Router::get('/auth', 'AuthServicer@index');
+Router::post('/auth/login', 'AuthServicer@login');
 
-Router::get('/main', 'UserController@index');
-Router::get('/main/logout', 'UserController@sessionDestroy');
-Router::get('/users', 'UserController@index');
-Router::get('/users/edit', 'UserController@edit');
+Router::get('/main', 'UserServicer@index');
+Router::get('/main/logout', 'UserServicer@sessionDestroy');
+Router::get('/users', 'UserServicer@index');
+Router::get('/users/edit', 'UserServicer@edit');
+Router::post('/users/save', 'UserServicer@save');
 
-Router::get('/auth/session', 'AuthController@getSession');
+Router::get('/auth/session', 'AuthServicer@getSession');

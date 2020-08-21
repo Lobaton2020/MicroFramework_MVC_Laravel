@@ -24,10 +24,10 @@ if (php_sapi_name() == "cli") {
                 $content = file_get_contents("template_model.txt");
                 $content = str_replace(":model:", $name, $content);
                 break;
-            case "controller":
-                $ruta = "../../app/controllers/";
+            case "servicer":
+                $ruta = "../../app/servicers/";
                 $msg = "Controller";
-                $content = file_get_contents("template_controller.txt");
+                $content = file_get_contents("template_servicer.txt");
                 $content = str_replace(":class:", $name, $content);
                 break;
             default;

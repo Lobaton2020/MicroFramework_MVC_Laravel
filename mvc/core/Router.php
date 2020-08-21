@@ -49,26 +49,38 @@ class Router
 
         if (array_key_exists($routeAux, self::$routes)) {
             self::$params = $route;
-            if (self::$routes[$routeAux]["methodData"] === "GET") {
-                return self::$routes[$routeAux];
-            } else {
-                if ($_SERVER["REQUEST_METHOD"] === "POST") {
-                    if (!empty($_POST) && isset($_POST["id"])) {
-                        self::$params[] = $_POST["id"];
-                    }
-                    if (!empty($_POST)) {
-                        self::$params[] = (object)$_POST;
-                    }
-                    return  self::$routes[$routeAux];
-                } else {
-                    exit(httpResponse(404, "error", "Method request 'GET' Unavailable")->json());
-                }
+            switch ($_SERVER["REQUEST_METHOD"]) {
+                case "GET":
+                    return self::verifyRequest($routeAux, "GET");
+                    break;
+                case "POST":
+                    return self::verifyRequest($routeAux, "POST");
+                    break;
+                default:
+                    exit(httpResponse(405, "error", "Method request '{$_SERVER["REQUEST_METHOD"]}' is unavailable un the app")->json());
             }
         } else {
             exit(httpResponse(404, "error", "Route '{$routeAux}' not found")->json());
         }
     }
-
+    private static function verifyRequest($routeAux, $method)
+    {
+        if (self::$routes[$routeAux]["methodData"] === $method) {
+            if ($method !== "GET") {
+                if (!empty($_POST) && isset($_POST["id"])) {
+                    self::$params[] = $_POST["id"];
+                }
+                if (!empty($_POST)) {
+                    self::$params[] = (object)$_POST;
+                }
+                if (!empty($_FILES)) {
+                    self::$params[] = (object)$_FILES;
+                }
+            }
+            return self::$routes[$routeAux];
+        }
+        return false;
+    }
     public static function getParams()
     {
         return self::$params;

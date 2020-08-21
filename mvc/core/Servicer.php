@@ -1,7 +1,7 @@
 <?php
 
 
-class Controller extends Authentication
+class Servicer extends Authentication
 {
     public function __construct()
     {

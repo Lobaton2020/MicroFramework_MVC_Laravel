@@ -10,6 +10,6 @@ spl_autoload_register(function ($class) {
     autoloader(SYS_PATH, $class);
     autoloader(APP_PATH . "models" . SEPARATOR, $class);
 });
-require_once APP_PATH . 'http' . SEPARATOR . 'routes.php';
+require_once APP_PATH . 'routes' . SEPARATOR . 'api.php';
 
 new App();
