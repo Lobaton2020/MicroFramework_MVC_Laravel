@@ -3,7 +3,7 @@
 
 class App
 {
-    protected $controller = "AuthServicer";
+    protected $controller = "AuthService";
     protected $method = "index";
     protected $params = [];
 
@@ -17,26 +17,26 @@ class App
             }
             $this->params = Router::getParams();
             if (isset($action["callback"])) {
-                $action["callback"](new Servicer());
+                $action["callback"](new Service());
             } else {
 
                 $controller = $action['controller'];
                 $method = $action["method"];
-                if (file_exists(APP_PATH . 'servicers/' . $controller . '.php')) {
-                    require_once APP_PATH . 'servicers' . SEPARATOR . $controller . '.php';
+                if (file_exists(APP_PATH . 'services/' . SEPARATOR . $controller . '.php')) {
+                    require_once APP_PATH . 'services' . SEPARATOR . $controller . '.php';
 
                     if (class_exists($controller)) {
                         $controller = new $controller();
                         if (method_exists($controller, $method)) {
                             echo (call_user_func_array([$controller, $method], $this->params));
                         } else {
-                            exit(httpResponse(404, "error", "Method Controller not found")->json());
+                            exit(httpResponse(404, "error", "Method Service not found")->json());
                         }
                     } else {
-                        exit(httpResponse(404, "error", "Class Controller not found")->json());
+                        exit(httpResponse(404, "error", "Class Service not found")->json());
                     }
                 } else {
-                    exit(httpResponse(404, "error", "File Controller not found")->json());
+                    exit(httpResponse(404, "error", "File Service not found")->json());
                 }
             }
         } catch (Exception $e) {

@@ -8,15 +8,15 @@
 
 
 Router::get('/', function ($session) {
-    $session->authentication("inside");
+    // $session->authentication("inside");
 });
-Router::get('/auth', 'AuthServicer@index');
-Router::post('/auth/login', 'AuthServicer@login');
+Router::get('/auth', 'AuthService@index');
+Router::post('/auth/login', 'AuthService@login');
 
-Router::get('/main', 'UserServicer@index');
-Router::get('/main/logout', 'UserServicer@sessionDestroy');
-Router::get('/users', 'UserServicer@index');
-Router::get('/users/edit', 'UserServicer@edit');
-Router::post('/users/save', 'UserServicer@save');
+Router::get('/main', 'UserService@index');
+Router::get('/main/logout', 'UserService@sessionDestroy');
+Router::get('/users', 'UserService@index');
+Router::get('/users/edit', 'UserService@edit');
+Router::post('/users/store', 'UserService@store');
 
 Router::get('/auth/session', 'AuthServicer@getSession');

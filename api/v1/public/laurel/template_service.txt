@@ -1,6 +1,6 @@
 <?php
 
-class :class: extends Servicer
+class :class: extends Service
 {
 
     public function __construct()

@@ -11,6 +11,11 @@ class JSON
         $this->datos = $data;
     }
 
+    public function array()
+    {
+        return $this->datos;
+    }
+
     public function json()
     {
         return json_encode($this->datos, true);

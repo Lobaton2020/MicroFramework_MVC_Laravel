@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="file" multiple name="" id="sendimg">
+    <script>
+        (async() => {
+            let img = document.querySelector("#sendimg");
+            img.addEventListener("change", async() => {
+
+                var form = new FormData();
+                form.append("name", "Andres")
+                form.append("lastname", "Andres");
+                [...img.files].forEach((elem) => {
+                    form.append("imgs[]", elem);
+                });
+                let options = {
+                    method: "POST",
+                    body: form
+                };
+                let res = await fetch("api/v1/public/users/store", options);
+                console.log(res);
+                res = await res.json();
+            });
+            let res = await fetch("api/v1/public/main");
+            console.log(await res.json())
+        })();
+    </script>
+</body>
+
+</html>

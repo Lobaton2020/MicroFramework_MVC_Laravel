@@ -6,6 +6,15 @@ class Model
     protected $table;
     protected $primaryKey = "id";
     protected $foreignKey = "id";
+    private static $paginate;
+
+    // public static function findT($id)
+    // {
+    //     $model = new static();
+    //     $sql = "SELECT * FROM {$model->table} WHERE {$model->primaryKey} = :id";
+    //     $params = [":id" => $id];
+    //     return new Wrapper(DB::get($sql, $params));
+    // }
 
     public static function find($id)
     {
@@ -24,7 +33,20 @@ class Model
         return new Actions($result, [$model->table, $model->primaryKey]);
     }
 
-    public static function all($limit = 20)
+    public static function paginate($request, $limit = 15)
+    {
+        $model = new static();
+        $page = new Paginate($request, $model::count(), $limit);
+        $init = $page->page();
+        self::$paginate = $page;
+        $sql = "SELECT * FROM {$model->table} limit {$init},{$limit}";
+        return DB::select($sql);
+    }
+    public static function infoPaginate($route)
+    {
+        return self::$paginate->makeInfo($route);
+    }
+    public static function all($limit = 100)
     {
         $model = new static();
         $sql = "SELECT * FROM {$model->table} limit {$limit}";
@@ -66,12 +88,57 @@ class Model
         $params = [":id" => $id];
         return DB::query($sql, $params);
     }
+    public static function count()
+    {
+        $model = new static();
+        $sql = "SELECT * FROM {$model->table}";
+        return DB::count($sql);
+    }
     public static function save()
     {
         $model = new static();
         return new Actions("", [$model->table, ""]);
     }
+    /**
+     * Recovery data with relationalship that other table
+     * @param 
+     */
+    // public function hasOne($class, $primaryKey, $foreignKey)
+    // {
+    //     $class = new $class;
+    //     $model = new static();
+    //     $sql = "SELECT * FROM {$class->table} WHERE {$model->primaryKey} = :id limit 1";
+    //     dd($sql);
+    //     // $params = [":id" => $id];
+    //     // return DB::query($sql, $params);
+    // }
 }
+
+// class Wrapper
+// {
+// public $data;
+// public function __construct($data)
+// {
+// $this->data = $data;
+// }
+// public  function get()
+// {
+// $class = new s;
+// $model = ;
+// return Wrapper::class;
+// dd($model);
+// return $sql = "SELECT * FROM {$model->table} WHERE {$model->primaryKey} = :id limit 1";
+// dd($sql);
+// $params = [":id" => $id];
+// return DB::query($sql, $params);
+// return "Holaa";
+// }
+
+
+// public function hasOne($class, $primaryKey, $foreignKey)
+// {
+// }
+// }
 
 class Actions
 {

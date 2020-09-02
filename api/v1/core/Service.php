@@ -1,7 +1,7 @@
 <?php
 
 
-class Servicer extends Authentication
+class Service extends Authentication
 {
     public function __construct()
     {
@@ -12,11 +12,11 @@ class Servicer extends Authentication
         switch ($type) {
             case "AUTH":
                 if (!$this->checkSession()) {
-                    exit(httpResponse(403, "accessdenied", "Your Session have finished, Try to do login")->json());
+                    exit(httpResponse(401, "accessdenied", "Your Session have finished, Try to do login")->json());
                 }
                 break;
             default;
-                exit(httpResponse(404, "errorparam", "Error param. Verify Authentication")->json());
+                exit(httpResponse(500, "errorparam", "Error param. Verify Authentication")->json());
         }
     }
 }
