@@ -3,9 +3,7 @@
 
 class Service extends Authentication
 {
-    public function __construct()
-    {
-    }
+
     public function authentication($type = "AUTH")
     {
         parent::__construct();
@@ -18,5 +16,14 @@ class Service extends Authentication
             default;
                 exit(httpResponse(500, "errorparam", "Error param. Verify Authentication")->json());
         }
+    }
+
+    public function destroySession()
+    {
+        parent::__construct();
+        if (parent::destroySession()) {
+            return true;
+        }
+        return false;
     }
 }

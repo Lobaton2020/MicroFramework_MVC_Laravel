@@ -2,18 +2,19 @@
 
 class DB
 {
-
     public static function get($sql, $params = [])
     {
         $stmt = self::connection()->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetch();
     }
+
     public static function query($sql, $params = [])
     {
         $stmt = self::connection()->prepare($sql);
         return $stmt->execute($params);
     }
+
     public static function count($sql, $params = [])
     {
         $stmt = self::connection()->prepare($sql);

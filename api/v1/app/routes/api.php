@@ -12,11 +12,9 @@ Router::get('/', function ($session) {
 });
 Router::get('/auth', 'AuthService@index');
 Router::post('/auth/login', 'AuthService@login');
+Router::post('/auth/logout', 'AuthService@destroy');
 
-Router::get('/main', 'UserService@index');
-Router::get('/main/logout', 'UserService@sessionDestroy');
 Router::get('/users', 'UserService@index');
 Router::get('/users/edit', 'UserService@edit');
 Router::post('/users/store', 'UserService@store');
-
-Router::get('/auth/session', 'AuthServicer@getSession');
+Router::post('/users/delete', 'UserService@delete');

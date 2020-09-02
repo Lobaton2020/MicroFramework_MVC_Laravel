@@ -35,7 +35,6 @@ class Router
         }
     }
 
-
     public static function getAction($route)
     {
         if (!empty($route)) {
@@ -63,6 +62,7 @@ class Router
             exit(httpResponse(404, "error", "Route '{$routeAux}' not found")->json());
         }
     }
+
     private static function verifyRequest($routeAux, $method)
     {
         if (self::$routes[$routeAux]["methodData"] === $method) {
@@ -85,6 +85,7 @@ class Router
         }
         return false;
     }
+
     public static function getParams()
     {
         return self::$params;

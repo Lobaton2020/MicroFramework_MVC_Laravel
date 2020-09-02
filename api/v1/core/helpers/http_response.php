@@ -5,13 +5,12 @@ function httpResponse($code = 200, $type = "ok", $message = null, $datos = null)
         "type" => "ok",
         "status" => 200,
         "message" => !isset($message) ? "All right, that's good" : $message,
-        "data" => false,
     ];
 
     if ($datos != null) {
         $data["data"] = $datos;
     }
-    if (gettype($code) == "array") {
+    if (in_array(gettype($code), ["array", "object", "boolean"])) {
         $data["data"] = $code;
         $code = 200;
     }

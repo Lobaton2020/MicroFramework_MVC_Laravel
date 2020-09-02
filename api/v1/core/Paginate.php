@@ -1,7 +1,6 @@
 <?php
 class Paginate
 {
-
     private $request;
     private $countRegisters;
     private $next_url;
@@ -16,14 +15,19 @@ class Paginate
         $this->countRegisters = $countRegisters;
         $this->per_page = $size;
     }
+
     public function page()
     {
+        $execededPage = false;
         $page = $this->validatePage();
         $page = filter_var($page, FILTER_SANITIZE_NUMBER_INT);
 
-        $this->total = ceil($this->countRegisters / $this->per_page);
-        $page = $page > $this->total ? 1 : $page;
 
+        $this->total = ceil($this->countRegisters / $this->per_page);
+        $page = $page > $this->total ? $execededPage = true : $page;
+        if ($execededPage) {
+            exit(httpResponse(404, "error", "This paginate had exceded the number, page or registers not found")->json());
+        }
         $this->current_page = $page == 0 ? 1 : $page;
         $this->prev_url = (($page - 1) > $this->total) ? null : $page - 1;
         $this->next_url = (($page + 1) > $this->total) ? null : $page + 1;
@@ -40,6 +44,7 @@ class Paginate
         }
         return 1;
     }
+
     public function makeInfo($route)
     {
         return [

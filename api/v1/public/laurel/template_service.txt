@@ -2,15 +2,14 @@
 
 class :class: extends Service
 {
-
     public function __construct()
     {
-        // 
+        // $this->authentication();
     }
 
     public function index()
     {
+
     }
-
-
+    
 }

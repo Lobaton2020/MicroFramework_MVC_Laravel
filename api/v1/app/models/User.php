@@ -3,27 +3,26 @@
 
 class User extends Model
 {
-    protected $table = "users";
-    protected $primaryKey = "user_id";
-    protected $hidden; //campos de no mostrar
+    protected $table = "usuario";
+    protected $primaryKey = "idusuario";
 
-    // public function login($email, $pass)
-    // {
-    //     $user = DB::get("SELECT * FROM {$this->table} WHERE correo = :email", ["email" => $email]);
-    //     if (!empty($user)) {
-    //         if (verify($pass, $user->contrasena)) {
-    //             unset($user->contrasena);
-    //             return $user;
-    //         } else {
-    //             return false;
-    //         }
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
-    public function rol()
+    public function login($email, $pass)
     {
-        // return $this->hasOne("User", "idrol", "idusuario");
+        $user = DB::get("SELECT * FROM {$this->table} WHERE correo = :email", ["email" => $email]);
+        if (!empty($user)) {
+            if (verify($pass, $user->contrasena)) {
+                unset($user->contrasena);
+                return $user;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function sayHello()
+    {
+        return "hello peoplE";
     }
 }

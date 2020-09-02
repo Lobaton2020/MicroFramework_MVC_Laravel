@@ -1,5 +1,8 @@
 <?php
 
+require_once "../../app/config/config.php";
+require_once "../../core/DB.php";
+
 function print_m($type, $mensaje)
 {
     if ($type == "success") {
@@ -11,6 +14,7 @@ function print_m($type, $mensaje)
 
 if (php_sapi_name() == "cli") {
     if ($argc == 3) {
+        $content = false;
         $ruta = "";
         $msg = "";
         $request = explode(":", $argv[1]);
@@ -38,15 +42,24 @@ if (php_sapi_name() == "cli") {
                     $content = file_get_contents("template_contract.txt");
                     $content = str_replace(":contract:", $name, $content);
                     break;
+                case "migration":
+                    createMigration($name);
+                    break;
+                case "destroy":
+                    dropTables($name);
+                    break;
                 default;
                     print_m("error", "Sintax error in option '{$type}'");
                     exit();
             }
-            $file = fopen($ruta . $name . ".php", "w+");
-            if (fwrite($file, $content)) {
-                print_m("success", "{$msg} created successfully");
-            } else {
-                print_m("error", "{$msg} error to create");
+            if ($content) {
+
+                $file = fopen($ruta . $name . ".php", "w+");
+                if (fwrite($file, $content)) {
+                    print_m("success", "{$msg} created successfully");
+                } else {
+                    print_m("error", "{$msg} error to create");
+                }
             }
         } else {
             print_m("error", "Error of sintax '{$action}', check that!");
@@ -55,5 +68,50 @@ if (php_sapi_name() == "cli") {
         print_m("error", "Error of sintax number params, check that!");
     }
 } else {
-    echo "Error de entorno de ejecución";
+    echo "Error de entorno de ejecución.";
+}
+
+function createMigration($name)
+{
+    $msg = "Migration";
+    $ruta = "../../app/database/{$name}.sql";
+    if (file_exists($ruta)) {
+        $content = file_get_contents($ruta);
+        if (DB::query($content)) {
+            print_m("success", "{$msg} executed successfully. \n");
+        } else {
+            print_m("error", "Error, {$msg} not completed. ");
+        }
+    } else {
+        print_m("error", "Error, file or database '{$name}' not found.");
+    }
+}
+
+function dropTables($name)
+{
+    $msg = "Tables";
+    $result = true;
+    if ($name == "all") {
+        foreach (DB::select("show tables") as $table) {
+            $table = array_values((array)$table);
+            $table = reset($table);
+            if (!DB::query("drop table {$table}")) {
+                $result  = false;
+            }
+        }
+    } else {
+        $msg = "Table";
+        try {
+            if (!DB::query("drop table {$name}")) {
+                $result  = false;
+            }
+        } catch (PDOException $e) {
+            $result  = false;
+        }
+    }
+    if ($result) {
+        print_m("success", "{$msg} deleted successfully.");
+    } else {
+        print_m("error", "Error, {$msg} not deleted. ");
+    }
 }
