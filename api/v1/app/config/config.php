@@ -1,13 +1,17 @@
 <?php
 
-// base de datps
+// Constantes de nuestra base de datos
 define("DBHOST", "localhost");
 define("DBNAME", "testuser");
 define("DBUSER", "root");
 define("DBPASWORD", "12345");
 define("DBDRIVER", "mysql");
 define("DBCHARSET", "utf8");
-
+// Constantes de nuestro servidor de correo
+define("SMTPHOST", "smtp.gmail.com");
+define("SMTPUSER", "");
+define("SMTPASSWORD", "");
+define("SMTPPORT", 587);
 // datos del servidor
 define("SEPARATOR", "\\");
 define("APP_PATH", dirname(dirname(__FILE__)) . "\\");
