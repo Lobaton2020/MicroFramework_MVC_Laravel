@@ -9,11 +9,6 @@ class App
 
     public function __construct()
     {
-        if(isset($_SERVER["CONTENT_TYPE"])){
-            if(strrpos($_SERVER["CONTENT_TYPE"],"multipart/form-data") !== false){
-                exit(httpResponse(500, "error", "This server no not soported the FORM-DATA")->json());
-            }
-        }
         $url = $this->getUrl();
         try {
             $action = Router::getAction($url);

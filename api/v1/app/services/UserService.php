@@ -15,6 +15,7 @@ class UserService extends Service implements ICrud
 
     public function store($request = null, $files =  null)
     {
+
         $user = User::create();
         $user->nombrecompleto = $request->name;
         $user->correo = $request->correo;
