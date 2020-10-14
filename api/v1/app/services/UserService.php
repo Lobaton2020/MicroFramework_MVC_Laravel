@@ -34,6 +34,7 @@ class UserService extends Service implements ICrud
     }
     public function update($request = null, $files = null)
     {
+        return httpResponse($request)->json();
     }
     public function delete($id = null)
     {

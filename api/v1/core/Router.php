@@ -16,12 +16,22 @@ class Router
         self::add("GET", $route, $location);
     }
 
-    public static function add($methodData, $route, $location)
+    public static function put($route, $location)
+    {
+        self::add("PUT", $route, $location);
+    }
+
+    public static function delete($route, $location)
+    {
+        self::add("DELETE", $route, $location);
+    }
+
+    public static function add($methodHttp, $route, $location)
     {
         if (gettype($location) === "object") {
             static::$routes[$route] = [
                 'callback' => $location,
-                'methodData' => $methodData
+                'methodHttp' => self::addMethodHttp(self::$routes,$route,$methodHttp)
             ];
         } else {
 
@@ -30,9 +40,19 @@ class Router
             static::$routes[$route] = [
                 'controller' => $controller,
                 'method' => $method,
-                'methodData' => $methodData
+                'methodHttp' => self::addMethodHttp(self::$routes,$route,$methodHttp)
             ];
         }
+    }
+    private static function addMethodHttp($routes,$route,$methodHttp){
+        if(isset($routes[$route])){
+            if(!in_array($methodHttp,$routes[$route]["methodHttp"])){
+                array_push($routes[$route]["methodHttp"],$methodHttp);
+                return $routes[$route]["methodHttp"];
+            }
+        }
+        return [$methodHttp];
+
     }
 
     public static function getAction($route)
@@ -45,18 +65,24 @@ class Router
         } else {
             $routeAux = "/";
         }
-
         if (array_key_exists($routeAux, self::$routes)) {
             self::$params = $route;
-            switch ($_SERVER["REQUEST_METHOD"]) {
+            $method_http = $_SERVER["REQUEST_METHOD"];
+            switch ($method_http) {
                 case "GET":
                     return self::verifyRequest($routeAux, "GET");
                     break;
                 case "POST":
                     return self::verifyRequest($routeAux, "POST");
                     break;
+                case "PUT":
+                    return self::verifyRequest($routeAux, "PUT");
+                    break;
+                case "DELETE":
+                    return self::verifyRequest($routeAux, "DELETE");
+                    break;
                 default:
-                    exit(httpResponse(405, "error", "Method request '{$_SERVER["REQUEST_METHOD"]}' is unavailable un the app")->json());
+                    exit(httpResponse(405, "error", "Method request '{$_SERVER["REQUEST_METHOD"]}' is unsuported in this app")->json());
             }
         } else {
             exit(httpResponse(404, "error", "Route '{$routeAux}' not found")->json());
@@ -65,22 +91,21 @@ class Router
 
     private static function verifyRequest($routeAux, $method)
     {
-        if (self::$routes[$routeAux]["methodData"] === $method) {
-            if ($method !== "GET") {
-                if (!empty($_POST)) {
-                    self::$params[] = (object)$_POST;
+        if (in_array($method,self::$routes[$routeAux]["methodHttp"])) {
+                /**
+                 * Support method PUT - DELETE - GET
+                 * Ways of receive data:
+                 * 1."name=juan&lastname=lopez"
+                 * 2.JSON as string "{name:"juan", lastname:"lopez""
+                 */
+                $other_method_data =  json_decode(file_get_contents('php://input'),true);
+                if($other_method_data === null){
+                     parse_str(file_get_contents('php://input'),$other_method_data);
                 }
-                if (!empty($_FILES)) {
-                    self::$params[] = (object)$_FILES;
-                }
-                if (!empty($_POST) && isset($_POST["id"])) {
-                    self::$params[] = $_POST["id"];
-                }
-            } else {
-                if (!empty($_GET)) {
-                    self::$params[] = (object)$_GET;
-                }
-            }
+                self::$params[] = isset($other_method_data) ? (object)$other_method_data : [];
+                self::$params[] = isset($_FILES) ? $_FILES : [];
+                self::$params[] = isset($other_method_data["id"]) ? $other_method_data["id"] : [];
+
             return self::$routes[$routeAux];
         }
         return false;

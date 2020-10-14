@@ -9,7 +9,7 @@ class Authentication
     protected $email;
     protected $image;
 
-    protected function __construct()
+    public function __construct()
     {
         $this->sessionStart();
         $this->initCredentials();
